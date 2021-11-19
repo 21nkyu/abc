@@ -1,0 +1,12 @@
+landmark,x,y,description
+10,143, 13,"forehead"
+6,152, 132,"between eyes"
+54,1, 148,"right ear"
+284,316, 148,"left ear"
+234,77, 208,"right cheek"
+454,254, 208,"left cheek"
+2,124, 214,"lower nose"
+0,164, 242,"upper lip"
+172,64, 255,"right chin"
+397,265, 265,"left chin"
+152,162, 289,"lower chin"

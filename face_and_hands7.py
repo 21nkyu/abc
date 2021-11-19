@@ -74,10 +74,9 @@ previousTime = 0
 currentTime = 0
 
 # load overlay images
-overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
+overlay = cv2.imread('samples/face5_1.png', cv2.IMREAD_UNCHANGED)
 overlay1 = cv2.imread('samples/face2.png', cv2.IMREAD_UNCHANGED)
 overlay2 = cv2.imread('samples/face1.png', cv2.IMREAD_UNCHANGED)
-overlay_scale = 2.0
 
 # overlay function
 def overlay_transparent(background_img, img_to_overlay_t, x, y, overlay_size=None):
@@ -134,6 +133,7 @@ while capture.isOpened():
     results = holistic_model.process(image)  # holistic 을 이용해서 얼굴을 인식
     image.flags.writeable = True
 
+
     #########################################################################
     # writeable 사용하는 이유? 방법
     # Make an array immutable(read - only)
@@ -184,10 +184,10 @@ while capture.isOpened():
     #         draw.draw_landmarks(img1, k)
     #         print(k.landmark[0].x * int(width), k.landmark[0].y * int(height))
     #         cv2.put
+
     if results.face_landmarks is not None:
         # for idx in results.face_landmarks.landmark:
         #     print(idx)
-
         face_idx = np.zeros((468, 3))
         for k, fi in enumerate(results.face_landmarks.landmark):
             # org = (int(results.face_landmarks.landmark[4].x * image.shape[1]),
@@ -195,7 +195,7 @@ while capture.isOpened():
             face_idx[k] = [fi.x, fi.y, fi.z]
             # draw.draw_landmarks(img1, fi)
             # print(face_idx[k])
-        print(int(face_idx[4][0] * image.shape[1]), int(face_idx[4][0] * image.shape[0]))
+        print(int(face_idx[4][0] * image.shape[1]), int(face_idx[4][1] * image.shape[0]))
 
     # print(results.face_landmarks.landmark[0]['x'])
     #     cv2.circle(image, center=((int(face_idx[4][0]) * image.shape[1]), (int(face_idx[4][1]) * image.shape[0])), radius=2, color=(0, 0, 255), lineType=cv2.LINE_AA)
@@ -358,7 +358,7 @@ while capture.isOpened():
     # cv2.imshow("Facial and Hand Landmarks", img1)
 
     # Enter key 'q' to break the loop
-    if cv2.waitKey(1) == ord('q'):
+    if cv2.waitKey(1) == 27:
         break
 
 # When all the process is done
