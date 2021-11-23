@@ -30,9 +30,9 @@ knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
 # overlay image
-overlay = cv2.imread('samples/ryan_transparent.png', cv2.IMREAD_UNCHANGED)
+overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
 overlay1 = cv2.imread('samples/btss.png', cv2.IMREAD_UNCHANGED)
-overlay2 = cv2.imread('samples/ssss.png', cv2.IMREAD_UNCHANGED)
+overlay2 = cv2.imread('image/batman_1.png', cv2.IMREAD_UNCHANGED)
 
 
 # overlay function
@@ -127,6 +127,7 @@ def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
 app_mode = st.sidebar.selectbox('Choose the App mode',
                                 ['About Project', 'Run on Image', 'Run on Video'])
 
+# app_mode: about Project
 if app_mode == 'About Project':
     st.markdown('About Project comment no.1')
     st.markdown("""
@@ -149,13 +150,15 @@ if app_mode == 'About Project':
                 comment 2
                 ''')
 
+
+# app_mode = Video
 elif app_mode == 'Run on Video':
 
     # st.set_option('deprecation.showfileUploaderEncoding', False)
     use_webcam = st.sidebar.button('Use Webcam')
-    record = st.sidebar.checkbox("Record Video")
-    if record:
-        st.checkbox("Recording", value=True)
+    # record = st.sidebar.checkbox("Record Video")
+    # if record:
+    #     st.checkbox("Recording", value=True)
 
     st.sidebar.markdown('---')
 
@@ -226,7 +229,7 @@ elif app_mode == 'Run on Video':
     drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
     # 동영상 밑에 있는 정보 창
-    kpi1, kpi2, kpi3, kpi4= st.beta_columns(4)
+    kpi1, kpi2, kpi3, kpi4 = st.beta_columns(4)
 
     with kpi1:
         st.markdown("**FrameRate**")
@@ -236,11 +239,11 @@ elif app_mode == 'Run on Video':
         st.markdown("**Detected Faces**")
         kpi2_text = st.markdown("0")
 
-    with kpi4:
+    with kpi3:
         st.markdown("**Detected Hands**")
         kpi4_text = st.markdown("0")
 
-    with kpi3:
+    with kpi4:
         st.markdown("**Image Width**")
         kpi3_text = st.markdown("0")
 
@@ -261,7 +264,7 @@ elif app_mode == 'Run on Video':
         ret, frame = cap.read()
         if not ret:
             continue
-
+        final_frame = frame.copy()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = face_mesh.process(frame)  # face
         result = hands.process(frame)       # hands
@@ -335,11 +338,18 @@ elif app_mode == 'Run on Video':
                                     org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
                                     fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
 
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay,
+                        #                             int(face_landmarks.landmark[8].x * width),
+                        #                             int(face_landmarks.landmark[8].y * height),
+                        #                             overlay_size=(350, 350))
+
                         frame = overlay_transparent(frame,
                                                     overlay,
-                                                    int(face_landmarks.landmark[0].x * width),
-                                                    int(face_landmarks.landmark[0].y * height),
-                                                    overlay_size=(100, 100))
+                                                    int(face_landmarks.landmark[8].x * width),
+                                                    int(face_landmarks.landmark[8].y * height),
+                                                    overlay_size=(350, 350))
+
 
                     elif rps_result[0]['rps'] == 'filter2':
                         text = 'face : overlay1'
@@ -350,11 +360,16 @@ elif app_mode == 'Run on Video':
                                     fontScale=2,
                                     color=(0, 255, 0),
                                     thickness=3)
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay1,
+                        #                             int(face_landmarks.landmark[4].x * width),
+                        #                             int(face_landmarks.landmark[4].y * height),
+                        #                             overlay_size=(250, 250))
                         frame = overlay_transparent(frame,
                                                     overlay1,
-                                                    int(face_landmarks.landmark[0].x * width),
-                                                    int(face_landmarks.landmark[0].y * height),
-                                                    overlay_size=(100, 100))
+                                                    int(face_landmarks.landmark[4].x * width),
+                                                    int(face_landmarks.landmark[4].y * height),
+                                                    overlay_size=(250, 250))
 
                     elif rps_result[0]['rps'] == 'filter3':
                         text = 'face : overlay2'
@@ -365,27 +380,36 @@ elif app_mode == 'Run on Video':
                                     fontScale=2,
                                     color=(0, 255, 0),
                                     thickness=3)
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay2,
+                        #                             int(face_landmarks.landmark[8].x * width),
+                        #                             int(face_landmarks.landmark[8].y * height),
+                        #                             overlay_size=(150, 150))
                         frame = overlay_transparent(frame,
                                                     overlay2,
-                                                    int(face_landmarks.landmark[0].x * width),
-                                                    int(face_landmarks.landmark[0].y * height),
-                                                    overlay_size=(100, 100))
+                                                    int(face_landmarks.landmark[8].x * width),
+                                                    int(face_landmarks.landmark[8].y * height),
+                                                    overlay_size=(150, 150))
 
         currTime = time.time()
         fps = 1 / (currTime - prevTime)
         prevTime = currTime
 
-        # record
-        if record:
-            # st.checkbox("Recording", value=True)
-            out.write(frame)
+        # # record
+        # if record:
+        #     # st.checkbox("Recording", value=True)
+        #     out.write(frame)
 
         # Dashboard
         kpi1_text.write(f"<h1 style='text-align: center; color: red;'>{int(fps)}</h1>", unsafe_allow_html=True)
         kpi2_text.write(f"<h1 style='text-align: center; color: red;'>{face_count}</h1>", unsafe_allow_html=True)
-        kpi4_text.write(f"<h1 style='text-align: center; color: red;'>{hand_count}</h1>", unsafe_allow_html=True)
-        kpi3_text.write(f"<h1 style='text-align: center; color: red;'>{width}</h1>", unsafe_allow_html=True)
+        kpi3_text.write(f"<h1 style='text-align: center; color: red;'>{hand_count}</h1>", unsafe_allow_html=True)
+        kpi4_text.write(f"<h1 style='text-align: center; color: red;'>{width}</h1>", unsafe_allow_html=True)
 
+        # if not record: output image(frame)
+        # frame = cv2.resize(final_frame, (0, 0), fx=0.8, fy=0.8)
+        # frame = image_resize(image=final_frame, width=640)
+        # stframe.image(final_frame, channels='BGR', use_column_width=True)
         frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
         frame = image_resize(image=frame, width=640)
         stframe.image(frame, channels='BGR', use_column_width=True)
@@ -400,7 +424,7 @@ elif app_mode == 'Run on Video':
     out.release()
 
 
-# Image
+# app_mode = Image
 elif app_mode == 'Run on Image':
 
     drawing_spec = mp_drawing.DrawingSpec(thickness=2, circle_radius=1)
@@ -431,7 +455,7 @@ elif app_mode == 'Run on Image':
     detection_confidence = st.sidebar.slider('Min Detection Confidence', min_value =0.0,max_value = 1.0,value = 0.5)
     st.sidebar.markdown('---')
 
-    img_file_buffer = st.sidebar.file_uploader("Upload an image", type=[ "jpg", "jpeg",'png'])
+    img_file_buffer = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", 'png'])
 
     if img_file_buffer is not None:
         image = np.array(Image.open(img_file_buffer))
