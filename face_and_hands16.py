@@ -7,11 +7,10 @@ import time
 from PIL import Image
 
 # 손인식 개수, 학습된 제스쳐
-gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-           6: 'six', 7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
+gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six', 7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
 
 # 사용할 제스쳐 rock paper scissors = rps
-rps_gesture = {0: 'filter1', 5: 'filter2', 9: 'filter3'}
+# rps_gesture = {0: 'filter1', 5: 'filter2', 9: 'filter3'}
 
 # MediaPipe hands model
 mp_hands = mp.solutions.hands
@@ -30,9 +29,17 @@ knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
 # overlay image
-overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
-overlay1 = cv2.imread('samples/btss.png', cv2.IMREAD_UNCHANGED)
-overlay2 = cv2.imread('image/batman_1.png', cv2.IMREAD_UNCHANGED)
+# overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED) #주먹
+# overlay1 = cv2.imread('samples/btss.png', cv2.IMREAD_UNCHANGED) #가위
+# overlay2 = cv2.imread('image/batman_1.png', cv2.IMREAD_UNCHANGED) #보
+
+overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)       # 0 개구리주먹
+overlay1 = cv2.imread('samples/petal.png', cv2.IMREAD_UNCHANGED)      # 1 꽃잎
+overlay2 = cv2.imread('samples/catear.png', cv2.IMREAD_UNCHANGED)     # 2 고양이귀
+overlay3 = cv2.imread('samples/birthday.png', cv2.IMREAD_UNCHANGED)   # 3 생일축하메세지
+overlay4 = cv2.imread('samples/newyear.png', cv2.IMREAD_UNCHANGED)    # 4 새해메세지
+overlay5 = cv2.imread('samples/christmas.png', cv2.IMREAD_UNCHANGED)  # 5 크리스마스 메세지
+overlay6 = cv2.imread('samples/face1.png', cv2.IMREAD_UNCHANGED)  # 6 얼굴표정
 
 
 # overlay function
@@ -241,11 +248,11 @@ elif app_mode == 'Run on Video':
 
     with kpi3:
         st.markdown("**Detected Hands**")
-        kpi4_text = st.markdown("0")
+        kpi3_text = st.markdown("0")
 
     with kpi4:
         st.markdown("**Image Width**")
-        kpi3_text = st.markdown("0")
+        kpi4_text = st.markdown("0")
 
     st.markdown("<hr/>", unsafe_allow_html=True)
 
@@ -264,7 +271,7 @@ elif app_mode == 'Run on Video':
         ret, frame = cap.read()
         if not ret:
             continue
-        final_frame = frame.copy()
+        final_frame = frame.copy() # 선,점 투명화
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = face_mesh.process(frame)  # face
         result = hands.process(frame)       # hands
@@ -291,8 +298,8 @@ elif app_mode == 'Run on Video':
                     joint[j] = [lm.x, lm.y, lm.z]
 
                 # Compute angles between joints
-                v1 = joint[[0, 1, 2, 3, 0, 5, 6, 7, 0, 9, 10, 11, 0, 13, 14, 15, 0, 17, 18, 19], :]     #  Parent joint
-                v2 = joint[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], :]  #  Child joint
+                v1 = joint[[0, 1, 2, 3, 0, 5, 6, 7, 0, 9, 10, 11, 0, 13, 14, 15, 0, 17, 18, 19], :]     # Parent joint
+                v2 = joint[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], :]  # Child joint
                 v = v2 - v1  # [20,3]
 
                 # Normalize v
@@ -313,15 +320,15 @@ elif app_mode == 'Run on Video':
                 idx = int(knn_results[0][0])
 
                 # Draw gesture result
-                if idx in rps_gesture.keys():
+                if idx in gesture.keys():
                     # (y, x) ????
                     # org: text 의 좌표
                     org = (int(res.landmark[0].x * frame.shape[1]), int(res.landmark[0].y * frame.shape[0]))
-                    cv2.putText(frame, text=rps_gesture[idx].upper(), org=(org[0], org[1] + 20),
+                    cv2.putText(frame, text=gesture[idx].upper(), org=(org[0], org[1] + 20),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255, 255, 255), thickness=2)
 
                     rps_result.append({
-                        'rps': rps_gesture[idx],
+                        'rps': gesture[idx],
                         'org': org
                     })
 
@@ -330,7 +337,7 @@ elif app_mode == 'Run on Video':
                 # depends on pose shows different image
                 if len(rps_result) >= 1:
                     text = ''
-                    if rps_result[0]['rps'] == 'filter1':
+                    if rps_result[0]['rps'] == 'fist':
                         text = 'face : overlay'
                         # pic = 1
                         cv2.putText(frame,
@@ -340,8 +347,8 @@ elif app_mode == 'Run on Video':
 
                         final_frame = overlay_transparent(final_frame,
                                                     overlay,
-                                                    int(face_landmarks.landmark[8].x * width),
-                                                    int(face_landmarks.landmark[8].y * height),
+                                                    int(face_landmarks.landmark[0].x * width),
+                                                    int(face_landmarks.landmark[0].y * height),
                                                     overlay_size=(350, 350))
 
                         # frame = overlay_transparent(frame,
@@ -351,7 +358,7 @@ elif app_mode == 'Run on Video':
                         #                             overlay_size=(350, 350))
 
 
-                    elif rps_result[0]['rps'] == 'filter2':
+                    elif rps_result[0]['rps'] == 'one':
                         text = 'face : overlay1'
                         cv2.putText(frame,
                                     text=text,
@@ -362,16 +369,16 @@ elif app_mode == 'Run on Video':
                                     thickness=3)
                         final_frame = overlay_transparent(final_frame,
                                                     overlay1,
-                                                    int(face_landmarks.landmark[4].x * width),
-                                                    int(face_landmarks.landmark[4].y * height),
-                                                    overlay_size=(250, 250))
+                                                    int(face_landmarks.landmark[1].x * width),
+                                                    int(face_landmarks.landmark[1].y * height),
+                                                    overlay_size=(300, 300))
                         # frame = overlay_transparent(frame,
                         #                             overlay1,
                         #                             int(face_landmarks.landmark[4].x * width),
                         #                             int(face_landmarks.landmark[4].y * height),
                         #                             overlay_size=(250, 250))
 
-                    elif rps_result[0]['rps'] == 'filter3':
+                    elif rps_result[0]['rps'] == 'yeah':
                         text = 'face : overlay2'
                         cv2.putText(frame,
                                     text=text,
@@ -382,14 +389,70 @@ elif app_mode == 'Run on Video':
                                     thickness=3)
                         final_frame = overlay_transparent(final_frame,
                                                     overlay2,
-                                                    int(face_landmarks.landmark[8].x * width),
-                                                    int(face_landmarks.landmark[8].y * height),
-                                                    overlay_size=(150, 150))
+                                                    int(face_landmarks.landmark[10].x * width),
+                                                    int(face_landmarks.landmark[10].y * height),
+                                                    overlay_size=(200, 200))
                         # frame = overlay_transparent(frame,
                         #                             overlay2,
                         #                             int(face_landmarks.landmark[8].x * width),
                         #                             int(face_landmarks.landmark[8].y * height),
                         #                             overlay_size=(150, 150))
+                    elif rps_result[0]['rps'] == 'three':
+                        text = 'face : overlay3'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        final_frame = overlay_transparent(final_frame,
+                                                          overlay3,
+                                                          int(face_landmarks.landmark[10].x * width),
+                                                          int(face_landmarks.landmark[10].y * height - 15),
+                                                          overlay_size=(330, 330))
+                    elif rps_result[0]['rps'] == 'four':
+                        text = 'face : overlay4'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        final_frame = overlay_transparent(final_frame,
+                                                          overlay4,
+                                                          int(face_landmarks.landmark[454].x * width+150),
+                                                          int(face_landmarks.landmark[454].y * height),
+                                                          overlay_size=(300, 300))
+                    elif rps_result[0]['rps'] == 'five':
+                        text = 'face : overlay5'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        final_frame = overlay_transparent(final_frame,
+                                                          overlay5,
+                                                          int(face_landmarks.landmark[454].x * width + 150),
+                                                          int(face_landmarks.landmark[454].y * height),
+                                                          overlay_size=(350, 350))
+                    elif rps_result[0]['rps'] == 'ok':
+                        text = 'face : overlay6'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        final_frame = overlay_transparent(final_frame,
+                                                          overlay6,
+                                                          int(face_landmarks.landmark[195].x * width),
+                                                          int(face_landmarks.landmark[195].y * height),
+                                                          overlay_size=(140, 140))
 
         currTime = time.time()
         fps = 1 / (currTime - prevTime)
@@ -410,6 +473,7 @@ elif app_mode == 'Run on Video':
         frame = cv2.resize(final_frame, (0, 0), fx=0.8, fy=0.8)
         frame = image_resize(image=final_frame, width=640)
         stframe.image(final_frame, channels='BGR', use_column_width=True)
+
         # frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
         # frame = image_resize(image=frame, width=640)
         # stframe.image(frame, channels='BGR', use_column_width=True)
@@ -452,7 +516,7 @@ elif app_mode == 'Run on Image':
 
     max_faces = st.sidebar.number_input('Maximum Number of Faces', value=2, min_value=1)
     st.sidebar.markdown('---')
-    detection_confidence = st.sidebar.slider('Min Detection Confidence', min_value =0.0,max_value = 1.0,value = 0.5)
+    detection_confidence = st.sidebar.slider('Min Detection Confidence', min_value=0.0, max_value=1.0, value=0.5)
     st.sidebar.markdown('---')
 
     img_file_buffer = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", 'png'])

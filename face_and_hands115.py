@@ -8,10 +8,12 @@ from PIL import Image
 
 # 손인식 개수, 학습된 제스쳐
 gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-           6: 'six', 7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
-
+            7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
+# 손인식 개수, 학습된 제스쳐
+# gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+#            6: 'six', 7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
 # 사용할 제스쳐 rock paper scissors = rps
-rps_gesture = {0: 'filter1', 5: 'filter2', 9: 'filter3'}
+# rps_gesture = {0: 'filter1', 5: 'filter2', 9: 'filter3'}
 
 # MediaPipe hands model
 mp_hands = mp.solutions.hands
@@ -30,10 +32,11 @@ knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
 # overlay image
-overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
+overlay = cv2.imread('image/kn002.png', cv2.IMREAD_UNCHANGED)
 overlay1 = cv2.imread('samples/btss.png', cv2.IMREAD_UNCHANGED)
 overlay2 = cv2.imread('image/batman_1.png', cv2.IMREAD_UNCHANGED)
-
+overlay3 = cv2.imread('image/lens001.png', cv2.IMREAD_UNCHANGED)
+overlay4 = cv2.imread('image/star001.png', cv2.IMREAD_UNCHANGED)
 
 # overlay function
 def overlay_transparent(background_img, img_to_overlay_t, x, y, overlay_size=None):
@@ -125,11 +128,24 @@ def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
 
 
 app_mode = st.sidebar.selectbox('Choose the App mode',
-                                ['About Project', 'Run on Image', 'Run on Video'])
+                                ['About Project', 'Team', 'Run on Image', 'Run on Video'])
 
 # app_mode: about Project
 if app_mode == 'About Project':
-    st.markdown('About Project comment no.1')
+    st.markdown('About Project comment no.1 학습된 제스쳐를 인식해 웹캠이나 사진에 원하는 필터(이미지를) 변환하는 프로젝트'
+                '시작은 동영상에 필터를 입히는 작업을 진행 동영상에서 얼굴을 인식하고 dlib을 통해 랜드마크를 얻어 원하는 좌표에 이미지를 넣는 것을 진행 오버레이 하는 전반적인 방법에 대해 익힘'
+                '이후 얼굴을 인식 후 포즈는 손으로 인식해야 하기 때문에 손을 인식하는 방법을 찾기 위해 mediapipe의 hands모델을 사용함'
+                '손인식 인식 후 제스쳐를 인식 시키기 위해 mediapipe에서 학습된 좌표를 사용하고'
+                'opencv에서 ml 학습을 위해 제공된 것을 이용 knn 사용해 학습시킴'
+                '얼굴과 손을 함께 웹캠에서 인식을 하기 위해 hoistic 모델이나 face mesh모델을 사용해서 웹캠에서 손과 얼굴을 동시에 인식시킴'
+                '제스쳐를 활용하기 위해서 학습된 모델을 손과 얼굴을 인식한 코드에 더해서 손과 얼굴을 인식함과 동시에 학습된 제스쳐를 인삭하는 단계로 발전'
+                '제일 처음 시도했던 동영상에 필터 입히기를 통해 배웠던 오버레이하는 방법을 통해 제스쳐에 따라 오버레이 하는 이미지를 바꿔가며 웹캠에 출력하는 단계'
+                '원하는 좌표에 이미지를 넣기 위해서 landmark를 찾아 적용시키는 방법을 사용하여 웹캠이나 동영상 혹은 사진에 제스쳐에 따라 바뀌는 이미지를 넣는 프로젝트를 마무리함'
+                '더 발전된 방법은 cv2.homograpy와 cv2.warpPerspective를 사용하여 특징점을 연결하는 방법으로 좌표에 2d 이미지를 띄우는 것이 아닌 원하는 landmark의 다수의 점과 이미지를 연결시켜'
+                '입체감을 더하고 얼굴이 정면이 아니더라도 이미지가 원하는 부붙을 덮게 만드는 방법을 사용할 수 있음'
+                'streamlit을 통해 웹에는 못올렸지만 좌표의 이미지를 연결해서 시현가능한 정도까지 발전 시켰음'
+                '원하는 이미지의 픽셀값을 찾고 랜드마크와 이어서 출력하는 방법은 전문적인 이미지 처리가 없다면 완벽 할 수 없기 때문에 현재 수준에서 이질감없이'
+                '원하는 신체부위에 3d혹은 굴곡을 줘서 인식시키는 부분은 무리임')
     st.markdown("""
                 <style>
                 [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
@@ -147,8 +163,62 @@ if app_mode == 'About Project':
     st.video('https://www.youtube.com/watch?v=Zt_q6NOuihk')
 
     st.markdown('''
-                comment 2
+                comment 2 comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
+                comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
+                comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
+                comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
                 ''')
+
+elif app_mode == 'Team':
+    st.markdown('team members'
+                '기호 1번 전경서'
+                '기호 2번 조영은'
+                '기호 3번 이인규'
+                '기호 1번 전경서'
+                '기호 2번 조영은'
+                '기호 3번 이인규'
+                '기호 1번 전경서'
+                '기호 2번 조영은'
+                '기호 3번 이인규'
+                '기호 1번 전경서'
+                '기호 2번 조영은'
+                '기호 3번 이인규'
+                '기호 1번 전경서'
+                '기호 2번 조영은'
+                '기호 3번 이인규'
+                '기호 1번 전경서'
+                '기호 2번 조영은'
+                '기호 3번 이인규'
+                )
+    st.markdown("""
+                <style>
+                [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+                    width: 400px;
+                }
+                [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+                    width: 400px;
+                    margin-left: -400px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+                )
+    img1 = Image.open('pji/team.jpg')
+    st.image(img1, width=400, caption='Image')
+    # st.image(')
+
+    st.markdown('''
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                ''')
+
+
 
 
 # app_mode = Video
@@ -217,10 +287,10 @@ elif app_mode == 'Run on Video':
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps_input = int(cap.get(cv2.CAP_PROP_FPS))
 
-    # codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
-    # VideoWriter_fourcc -> 찾아보기기
-    codec = cv2.VideoWriter_fourcc('V', 'P', '0', '9')
-    out = cv2.VideoWriter('demos/output1.mp4', codec, fps_input, (width, height))
+    # # codec = cv2.VideoWriter_fourcc(*FLAGS.output_format)
+    # # VideoWriter_fourcc -> 찾아보기기
+    # codec = cv2.VideoWriter_fourcc('V', 'P', '0', '9')
+    # out = cv2.VideoWriter('demos/output1.mp4', codec, fps_input, (width, height))
 
     st.sidebar.text('Input Video')
     st.sidebar.video(tfflie.name)
@@ -265,6 +335,7 @@ elif app_mode == 'Run on Video':
         if not ret:
             continue
         final_frame = frame.copy()
+        frame = cv2.flip(frame, 1)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = face_mesh.process(frame)  # face
         result = hands.process(frame)       # hands
@@ -313,15 +384,15 @@ elif app_mode == 'Run on Video':
                 idx = int(knn_results[0][0])
 
                 # Draw gesture result
-                if idx in rps_gesture.keys():
+                if idx in gesture.keys():
                     # (y, x) ????
                     # org: text 의 좌표
                     org = (int(res.landmark[0].x * frame.shape[1]), int(res.landmark[0].y * frame.shape[0]))
-                    cv2.putText(frame, text=rps_gesture[idx].upper(), org=(org[0], org[1] + 20),
+                    cv2.putText(frame, text=gesture[idx].upper(), org=(org[0], org[1] + 20),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255, 255, 255), thickness=2)
 
                     rps_result.append({
-                        'rps': rps_gesture[idx],
+                        'rps': gesture[idx],
                         'org': org
                     })
 
@@ -330,7 +401,7 @@ elif app_mode == 'Run on Video':
                 # depends on pose shows different image
                 if len(rps_result) >= 1:
                     text = ''
-                    if rps_result[0]['rps'] == 'filter1':
+                    if rps_result[0]['rps'] == 'fist':
                         text = 'face : overlay'
                         # pic = 1
                         cv2.putText(frame,
@@ -338,20 +409,25 @@ elif app_mode == 'Run on Video':
                                     org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
                                     fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
 
-                        final_frame = overlay_transparent(final_frame,
-                                                    overlay,
-                                                    int(face_landmarks.landmark[8].x * width),
-                                                    int(face_landmarks.landmark[8].y * height),
-                                                    overlay_size=(350, 350))
-
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay,
+                        #                             int(face_landmarks.landmark[8].x * width),
+                        #                             int(face_landmarks.landmark[8].y * height),
+                        #                             overlay_size=(350, 350))
+                        #
                         # frame = overlay_transparent(frame,
                         #                             overlay,
                         #                             int(face_landmarks.landmark[8].x * width),
                         #                             int(face_landmarks.landmark[8].y * height),
                         #                             overlay_size=(350, 350))
+                        frame = overlay_transparent(frame,
+                                                    overlay,
+                                                    int(face_landmarks.landmark[8].x * width),
+                                                    int(face_landmarks.landmark[8].y * height),
+                                                    overlay_size=(350, 350))
 
 
-                    elif rps_result[0]['rps'] == 'filter2':
+                    elif rps_result[0]['rps'] == 'five':
                         text = 'face : overlay1'
                         cv2.putText(frame,
                                     text=text,
@@ -360,18 +436,18 @@ elif app_mode == 'Run on Video':
                                     fontScale=2,
                                     color=(0, 255, 0),
                                     thickness=3)
-                        final_frame = overlay_transparent(final_frame,
-                                                    overlay1,
-                                                    int(face_landmarks.landmark[4].x * width),
-                                                    int(face_landmarks.landmark[4].y * height),
-                                                    overlay_size=(250, 250))
-                        # frame = overlay_transparent(frame,
+                        # final_frame = overlay_transparent(final_frame,
                         #                             overlay1,
                         #                             int(face_landmarks.landmark[4].x * width),
                         #                             int(face_landmarks.landmark[4].y * height),
                         #                             overlay_size=(250, 250))
+                        frame = overlay_transparent(frame,
+                                                    overlay1,
+                                                    int(face_landmarks.landmark[4].x * width),
+                                                    int(face_landmarks.landmark[4].y * height),
+                                                    overlay_size=(250, 250))
 
-                    elif rps_result[0]['rps'] == 'filter3':
+                    elif rps_result[0]['rps'] == 'yeah':
                         text = 'face : overlay2'
                         cv2.putText(frame,
                                     text=text,
@@ -380,16 +456,39 @@ elif app_mode == 'Run on Video':
                                     fontScale=2,
                                     color=(0, 255, 0),
                                     thickness=3)
-                        final_frame = overlay_transparent(final_frame,
-                                                    overlay2,
-                                                    int(face_landmarks.landmark[8].x * width),
-                                                    int(face_landmarks.landmark[8].y * height),
-                                                    overlay_size=(150, 150))
-                        # frame = overlay_transparent(frame,
+                        # final_frame = overlay_transparent(final_frame,
                         #                             overlay2,
                         #                             int(face_landmarks.landmark[8].x * width),
                         #                             int(face_landmarks.landmark[8].y * height),
                         #                             overlay_size=(150, 150))
+                        frame = overlay_transparent(frame,
+                                                    overlay2,
+                                                    int(face_landmarks.landmark[8].x * width),
+                                                    int(face_landmarks.landmark[8].y * height),
+                                                    overlay_size=(150, 150))
+
+                    elif rps_result[0]['rps'] == 'ok':
+                        text = 'face : overlay3'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay2,
+                        #                             int(face_landmarks.landmark[8].x * width),
+                        #                             int(face_landmarks.landmark[8].y * height),
+                        #                             overlay_size=(150, 150))
+                        frame = overlay_transparent(frame,
+                                                    overlay3,
+                                                    int(res.landmark[3].x * width - 80),
+                                                    int(res.landmark[3].y * height - 25),
+                                                    overlay_size=(250, 250))
+
+                        frame = overlay_transparent(frame,
+                                                    overlay4, int(640/2), int(480/2), overlay_size=(300, 300))
 
         currTime = time.time()
         fps = 1 / (currTime - prevTime)
@@ -407,12 +506,12 @@ elif app_mode == 'Run on Video':
         kpi4_text.write(f"<h1 style='text-align: center; color: red;'>{width}</h1>", unsafe_allow_html=True)
 
         # if not record: output image(frame)
-        frame = cv2.resize(final_frame, (0, 0), fx=0.8, fy=0.8)
-        frame = image_resize(image=final_frame, width=640)
-        stframe.image(final_frame, channels='BGR', use_column_width=True)
-        # frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
-        # frame = image_resize(image=frame, width=640)
-        # stframe.image(frame, channels='BGR', use_column_width=True)
+        # frame = cv2.resize(final_frame, (0, 0), fx=0.8, fy=0.8)
+        # frame = image_resize(image=final_frame, width=640)
+        # stframe.image(final_frame, channels='BGR', use_column_width=True)
+        frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
+        frame = image_resize(image=frame, width=640)
+        stframe.image(frame, channels='BGR', use_column_width=True)
 
     st.text('Video Processed')
 
@@ -421,7 +520,7 @@ elif app_mode == 'Run on Video':
     st.video(out_bytes)
 
     cap.release()
-    out.release()
+    # out.release()
 
 
 # app_mode = Image

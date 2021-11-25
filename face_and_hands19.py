@@ -76,9 +76,9 @@ selected = 3
 hover = -1
 
 # Define image size parameters and open camera
-height,width = 576,768
+height, width = 576,768
 video = cv2.VideoCapture(0)
-ret,image = video.read()
+ret, image = video.read()
 image = cv2.resize(image,(width,height))
 
 # Link the output imshow to the mouse callback function
