@@ -8,7 +8,7 @@ from PIL import Image
 
 # 손인식 개수, 학습된 제스쳐
 gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-            7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
+           7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
 # 손인식 개수, 학습된 제스쳐
 # gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
 #            6: 'six', 7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
@@ -23,6 +23,7 @@ mp_face_mesh = mp.solutions.face_mesh
 
 # MediaPipe drawing model
 mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 # Gesture recognition model
 file = np.genfromtxt('data/gesture_train.csv', delimiter=',')
@@ -33,10 +34,13 @@ knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
 # overlay image
 overlay = cv2.imread('image/kn002.png', cv2.IMREAD_UNCHANGED)
-overlay1 = cv2.imread('samples/btss.png', cv2.IMREAD_UNCHANGED)
+overlay1 = cv2.imread('image/cake002.png', cv2.IMREAD_UNCHANGED)
 overlay2 = cv2.imread('image/batman_1.png', cv2.IMREAD_UNCHANGED)
 overlay3 = cv2.imread('image/lens001.png', cv2.IMREAD_UNCHANGED)
 overlay4 = cv2.imread('image/star001.png', cv2.IMREAD_UNCHANGED)
+overlay5 = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
+overlay6 = cv2.imread('image/bear001.png', cv2.IMREAD_UNCHANGED)
+overlay7 = cv2.imread('image/bg001.png', cv2.IMREAD_UNCHANGED)
 
 # overlay function
 def overlay_transparent(background_img, img_to_overlay_t, x, y, overlay_size=None):
@@ -219,6 +223,71 @@ elif app_mode == 'Team':
                 ''')
 
 
+# app_mode = Image
+elif app_mode == 'Run on Image':
+
+    drawing_spec = mp_drawing.DrawingSpec(thickness=2, circle_radius=1)
+
+    st.sidebar.markdown('---')
+
+    st.markdown(
+                """
+                <style>
+                [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+                    width: 400px;
+                }
+                [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+                    width: 400px;
+                    margin-left: -400px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True,
+                )
+    # options and info
+    st.markdown("**Detected Faces**")
+    kpi1_text = st.markdown("0")
+    st.markdown('---')
+
+    max_faces = st.sidebar.number_input('Maximum Number of Faces', value=2, min_value=1)
+    st.sidebar.markdown('---')
+    detection_confidence = st.sidebar.slider('Min Detection Confidence', min_value =0.0,max_value = 1.0,value = 0.5)
+    st.sidebar.markdown('---')
+
+    img_file_buffer = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", 'png'])
+
+    if img_file_buffer is not None:
+        image = np.array(Image.open(img_file_buffer))
+
+    else:
+        demo_image = DEMO_IMAGE
+        image = np.array(Image.open(demo_image))
+
+    st.sidebar.text('Original Image')
+    st.sidebar.image(image)
+    face_count = 0
+
+    # Image
+    # face mesh, hands detection and overlay image
+    # Dashboard
+    face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True,
+                                      max_num_faces=max_faces,
+                                      min_detection_confidence=detection_confidence)
+    results = face_mesh.process(image)
+    out_image = image.copy()
+
+    for face_landmarks in results.multi_face_landmarks:
+        face_count += 1
+        #print('face_landmarks:', face_landmarks)
+
+        mp_drawing.draw_landmarks(image=out_image,
+                                  landmark_list=face_landmarks,
+                                  connections=mp_face_mesh.FACEMESH_CONTOURS,
+                                  landmark_drawing_spec=drawing_spec,
+                                  connection_drawing_spec=drawing_spec)
+        kpi1_text.write(f"<h1 style='text-align: center; color: red;'>{face_count}</h1>", unsafe_allow_html=True)
+        st.subheader('Output Image')
+        st.image(out_image, use_column_width=True)
 
 
 # app_mode = Video
@@ -311,11 +380,11 @@ elif app_mode == 'Run on Video':
 
     with kpi3:
         st.markdown("**Detected Hands**")
-        kpi4_text = st.markdown("0")
+        kpi3_text = st.markdown("0")
 
     with kpi4:
         st.markdown("**Image Width**")
-        kpi3_text = st.markdown("0")
+        kpi4_text = st.markdown("0")
 
     st.markdown("<hr/>", unsafe_allow_html=True)
 
@@ -352,6 +421,7 @@ elif app_mode == 'Run on Video':
                                           connections=mp_face_mesh.FACEMESH_CONTOURS,
                                           landmark_drawing_spec=drawing_spec,
                                           connection_drawing_spec=drawing_spec)
+
         hand_count = 0
         if result.multi_hand_landmarks is not None:
             rps_result = []
@@ -383,6 +453,8 @@ elif app_mode == 'Run on Video':
                 ret, knn_results, neighbours, dist = knn.findNearest(data, 3)
                 idx = int(knn_results[0][0])
 
+                # gesture = {0: 'fist', 1: 'one', 5: 'five',
+                #            8: 'spider man', 9: 'yeah', 10: 'ok'}
                 # Draw gesture result
                 if idx in gesture.keys():
                     # (y, x) ????
@@ -422,10 +494,9 @@ elif app_mode == 'Run on Video':
                         #                             overlay_size=(350, 350))
                         frame = overlay_transparent(frame,
                                                     overlay,
-                                                    int(face_landmarks.landmark[8].x * width),
-                                                    int(face_landmarks.landmark[8].y * height),
-                                                    overlay_size=(350, 350))
-
+                                                    int(width/2),
+                                                    int(height/2),
+                                                    overlay_size=(width, height))
 
                     elif rps_result[0]['rps'] == 'five':
                         text = 'face : overlay1'
@@ -443,9 +514,9 @@ elif app_mode == 'Run on Video':
                         #                             overlay_size=(250, 250))
                         frame = overlay_transparent(frame,
                                                     overlay1,
-                                                    int(face_landmarks.landmark[4].x * width),
-                                                    int(face_landmarks.landmark[4].y * height),
-                                                    overlay_size=(250, 250))
+                                                    int(face_landmarks.landmark[200].x * width),
+                                                    int(face_landmarks.landmark[200].y * height + 50),
+                                                    overlay_size=(150, 150))
 
                     elif rps_result[0]['rps'] == 'yeah':
                         text = 'face : overlay2'
@@ -481,6 +552,11 @@ elif app_mode == 'Run on Video':
                         #                             int(face_landmarks.landmark[8].x * width),
                         #                             int(face_landmarks.landmark[8].y * height),
                         #                             overlay_size=(150, 150))
+                        # frame = overlay_transparent(frame,
+                        #                             overlay3,
+                        #                             int(res.landmark[3].x * width - 80),
+                        #                             int(res.landmark[3].y * height - 25),
+                        #                             overlay_size=(250, 250))
                         frame = overlay_transparent(frame,
                                                     overlay3,
                                                     int(res.landmark[3].x * width - 80),
@@ -489,6 +565,62 @@ elif app_mode == 'Run on Video':
 
                         frame = overlay_transparent(frame,
                                                     overlay4, int(640/2), int(480/2), overlay_size=(300, 300))
+
+                    elif rps_result[0]['rps'] == 'one':
+                        text = 'face : overlay5'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay2,
+                        #                             int(face_landmarks.landmark[8].x * width),
+                        #                             int(face_landmarks.landmark[8].y * height),
+                        #                             overlay_size=(150, 150))
+                        # frame = overlay_transparent(frame,
+                        #                             overlay3,
+                        #                             int(res.landmark[3].x * width - 80),
+                        #                             int(res.landmark[3].y * height - 25),
+                        #                             overlay_size=(250, 250))
+                        frame = overlay_transparent(frame,
+                                                    overlay5,
+                                                    int(face_landmarks.landmark[4].x * width - 30),
+                                                    int(face_landmarks.landmark[4].y * height - 30),
+                                                    overlay_size=(350, 350))
+
+                        # frame = overlay_transparent(frame,
+                        #                             overlay7,
+                        #                             int(width/2),
+                        #                             int(height/2),
+                        #                             overlay_size=(100, 100))
+
+                    elif rps_result[0]['rps'] == 'four':
+                        text = 'face : overlay1'
+                        cv2.putText(frame,
+                                    text=text,
+                                    org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
+                                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale=2,
+                                    color=(0, 255, 0),
+                                    thickness=3)
+                        # final_frame = overlay_transparent(final_frame,
+                        #                             overlay1,
+                        #                             int(face_landmarks.landmark[4].x * width),
+                        #                             int(face_landmarks.landmark[4].y * height),
+                        #                             overlay_size=(250, 250))
+                        # frame = overlay_transparent(frame,
+                        #                             overlay6,
+                        #                             int(face_landmarks.landmark[200].x * width + 15),
+                        #                             int(face_landmarks.landmark[200].y * height + 35),
+                        #                             overlay_size=(250, 250))
+                        frame = overlay_transparent(frame,
+                                                    overlay6,
+                                                    int(face_landmarks.landmark[18].x * width),
+                                                    int(face_landmarks.landmark[18].y * height),
+                                                    overlay_size=(150, 150))
 
         currTime = time.time()
         fps = 1 / (currTime - prevTime)
@@ -521,70 +653,3 @@ elif app_mode == 'Run on Video':
 
     cap.release()
     # out.release()
-
-
-# app_mode = Image
-elif app_mode == 'Run on Image':
-
-    drawing_spec = mp_drawing.DrawingSpec(thickness=2, circle_radius=1)
-
-    st.sidebar.markdown('---')
-
-    st.markdown(
-                """
-                <style>
-                [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
-                    width: 400px;
-                }
-                [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
-                    width: 400px;
-                    margin-left: -400px;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True,
-                )
-    # options and info
-    st.markdown("**Detected Faces**")
-    kpi1_text = st.markdown("0")
-    st.markdown('---')
-
-    max_faces = st.sidebar.number_input('Maximum Number of Faces', value=2, min_value=1)
-    st.sidebar.markdown('---')
-    detection_confidence = st.sidebar.slider('Min Detection Confidence', min_value =0.0,max_value = 1.0,value = 0.5)
-    st.sidebar.markdown('---')
-
-    img_file_buffer = st.sidebar.file_uploader("Upload an image", type=["jpg", "jpeg", 'png'])
-
-    if img_file_buffer is not None:
-        image = np.array(Image.open(img_file_buffer))
-
-    else:
-        demo_image = DEMO_IMAGE
-        image = np.array(Image.open(demo_image))
-
-    st.sidebar.text('Original Image')
-    st.sidebar.image(image)
-    face_count = 0
-
-    # Image
-    # face mesh, hands detection and overlay image
-    # Dashboard
-    face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True,
-                                      max_num_faces=max_faces,
-                                      min_detection_confidence=detection_confidence)
-    results = face_mesh.process(image)
-    out_image = image.copy()
-
-    for face_landmarks in results.multi_face_landmarks:
-        face_count += 1
-        #print('face_landmarks:', face_landmarks)
-
-        mp_drawing.draw_landmarks(image=out_image,
-                                  landmark_list=face_landmarks,
-                                  connections=mp_face_mesh.FACEMESH_CONTOURS,
-                                  landmark_drawing_spec=drawing_spec,
-                                  connection_drawing_spec=drawing_spec)
-        kpi1_text.write(f"<h1 style='text-align: center; color: red;'>{face_count}</h1>", unsafe_allow_html=True)
-        st.subheader('Output Image')
-        st.image(out_image, use_column_width=True)
