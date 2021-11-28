@@ -70,7 +70,6 @@ width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 
-
 # options
 detection_confidence = 0.5
 tracking_confidence = 0.5
