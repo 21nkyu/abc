@@ -202,6 +202,7 @@ elif app_mode == 'About Project 2':
                 ' 제출 하였습니다. 저희 팀은 최종적으로 랜드마크를 이어 붙여 출력하는 것까지 프로젝트를 진행을 완료하였습니다'
                 )
 
+    st.markdown('영상')
     st.video('demos/project001.mp4')
 
 
@@ -227,9 +228,6 @@ elif app_mode == 'About Project 2':
                 unsafe_allow_html=True
                 )
 
-    st.markdown('''
-                aa
-                ''')
 
 # app_mode = Image
 elif app_mode == 'Run on Image':
