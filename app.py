@@ -340,7 +340,7 @@ elif app_mode == 'Run on Video':
     # webcam 사용하지 않는다면 demo_video 재생
     if not video_file_buffer:
         if use_webcam:
-            cap = cv2.VideoCapture(-1)
+            cap = cv2.VideoCapture(0)
         else:
             cap = cv2.VideoCapture(DEMO_VIDEO)
             tfflie.name = DEMO_VIDEO
