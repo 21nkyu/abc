@@ -61,7 +61,7 @@ def overlay_transparent(background_img, img_to_overlay_t, x, y, overlay_size=Non
 
         bg_img[int(y-h/2):int(y+h/2), int(x-w/2):int(x+w/2)] = cv2.add(img1_bg, img2_fg)
 
-        # convert 4 channels to 4 channels
+        # convert 4 channels to 3 channels
         bg_img = cv2.cvtColor(bg_img, cv2.COLOR_BGRA2BGR)
         return bg_img
 
@@ -90,9 +90,6 @@ face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=detection_confidence,
 hands = mp_hands.Hands(max_num_hands=max_hands,
                        min_detection_confidence=detection_confidence,
                        min_tracking_confidence=tracking_confidence)
-
-
-
 
 prevTime = 0
 while cap.isOpened():
@@ -252,9 +249,6 @@ while cap.isOpened():
 
                     frame = overlay_transparent(frame,
                                                 overlay4, int(640/2), int(480/2), overlay_size=(300, 300))
-
-
-
 
     currTime = time.time()
     fps = 1 / (currTime - prevTime)

@@ -71,7 +71,3 @@ while cap.isOpened():
 # Release the capture and destroy all windows
 cap.release()
 cv2.destroyAllWindows()
-
-
-
-
