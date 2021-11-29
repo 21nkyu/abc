@@ -77,7 +77,7 @@ def overlay_transparent(background_img, img_to_overlay_t, x, y, overlay_size=Non
 DEMO_VIDEO = 'demos/demo.mp4'
 DEMO_IMAGE = 'demos/demo.jpg'
 
-st.title('Project')
+st.title('Team Schatz')
 
 st.markdown(
     """
