@@ -132,7 +132,7 @@ def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
 
 
 app_mode = st.sidebar.selectbox('Choose the App mode',
-                                ['About Project', 'Team', 'Run on Image', 'Run on Video'])
+                                ['About Project', 'About Project 2', 'Team intro', 'Run on Image', 'Run on Video'])
 
 # app_mode: about Project
 if app_mode == 'About Project':
@@ -164,32 +164,14 @@ if app_mode == 'About Project':
                 unsafe_allow_html=True
                 )
 
-    st.video('https://www.youtube.com/watch?v=Zt_q6NOuihk')
+    st.video('demos/project003.mp4')
 
     st.markdown('''
-                comment 2 comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
-                comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
-                comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
-                comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2comment 2
+                프로젝트 소개영상
                 ''')
 
-elif app_mode == 'Team':
+elif app_mode == 'Team intro':
     st.markdown('team members'
-                '기호 1번 전경서'
-                '기호 2번 조영은'
-                '기호 3번 이인규'
-                '기호 1번 전경서'
-                '기호 2번 조영은'
-                '기호 3번 이인규'
-                '기호 1번 전경서'
-                '기호 2번 조영은'
-                '기호 3번 이인규'
-                '기호 1번 전경서'
-                '기호 2번 조영은'
-                '기호 3번 이인규'
-                '기호 1번 전경서'
-                '기호 2번 조영은'
-                '기호 3번 이인규'
                 '기호 1번 전경서'
                 '기호 2번 조영은'
                 '기호 3번 이인규'
@@ -207,21 +189,48 @@ elif app_mode == 'Team':
                 """,
                 unsafe_allow_html=True
                 )
-    img1 = Image.open('pji/team.jpg')
-    st.image(img1, width=400, caption='Image')
+    img1 = Image.open('pji/team.png')
+    st.image(img1, width=400, caption='팀원사진')
     # st.image(')
 
     st.markdown('''
                 우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
                 ''')
 
+elif app_mode == 'About Project 2':
+    st.markdown('1. 랜드마크에 마스크의 픽셀좌표를 연결하여 이미지를 좀더 입체감 있게 표현할 수 있다.'
+                '최종 버전으로 사용하려했지만 스트림릿과의 연동이 원활하게 되지 않아 이전 버전을 최종본으로'
+                '제출 했지만 우리팀은 랜드마크를 이어 붙여 출력하는 것까지 프로젝트를진행 하였음'
+                )
+
+    st.video('demos/project001.mp4')
+
+
+    st.markdown('2. 스트림 릿을 통해 웹 배포를 완료 했지만 웹캠을 인식하는 부분에서 문제가 생겨 최종 배포는 완벽하게 하지 못했음.'
+                'https://share.streamlit.io/21nkyu/abc/app.py'
+                )
+
+    img1 = Image.open('demos/project002.png')
+    st.image(img1, width=400, caption='Image')
+    # st.image(')
+
+    st.markdown("""
+                <style>
+                [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+                    width: 400px;
+                }
+                [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+                    width: 400px;
+                    margin-left: -400px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+                )
+
+    st.markdown('''
+                aa
+                ''')
 
 # app_mode = Image
 elif app_mode == 'Run on Image':
