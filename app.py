@@ -94,7 +94,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.sidebar.title('project')
+st.sidebar.title('짭now')
 st.sidebar.subheader('Parameters')
 
 
