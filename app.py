@@ -171,11 +171,10 @@ if app_mode == 'About Project':
 
 
 elif app_mode == 'Team info':
-    st.markdown('team members'
-                '1호기 전경서'
-                '2호기 조영은'
-                '3호기 이인규'
-                )
+    st.markdown('team members')
+    st.markdown('1호기 전경서')
+    st.markdown('2호기 조영은')
+    st.markdown('3호기 이인규')
     st.markdown("""
                 <style>
                 [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
