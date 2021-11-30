@@ -6,6 +6,11 @@ import tempfile
 import time
 from PIL import Image
 
+from streamlit_webrtc import webrtc_streamer
+import av
+
+webrtc_streamer(key="qwqw")
+
 # 손인식 개수, 학습된 제스쳐
 gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
            7: 'rock', 8: 'spider man', 9: 'yeah', 10: 'ok'}
@@ -140,7 +145,7 @@ if app_mode == 'About Project':
     st.markdown('''
                     프로젝트 소개영상
                     ''')
-    st.video('demos/project003.mp4')
+    st.video('demos/project004.mp4')
 
 
     st.markdown('Project: 학습된 제스쳐를 인식해 웹캠이나 사진에 원하는 필터(이미지를) 변환하는 프로젝트')
@@ -169,11 +174,11 @@ if app_mode == 'About Project':
 
 
 
-elif app_mode == 'Team intro':
+elif app_mode == 'Team info':
     st.markdown('team members'
-                '기호 1번 전경서'
-                '기호 2번 조영은'
-                '기호 3번 이인규'
+                '1호기 전경서'
+                '2호기 조영은'
+                '3호기 이인규'
                 )
     st.markdown("""
                 <style>
@@ -193,7 +198,7 @@ elif app_mode == 'Team intro':
     # st.image(')
 
     st.markdown('''
-                우리는 열심히 프로젝트를 하여 피곤에 쩔은 모습이다
+                우리는 열심히 프로젝트를 하여 피곤에 쩐 모습이다
                 ''')
 
 elif app_mode == 'About Project 2':
