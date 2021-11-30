@@ -512,11 +512,16 @@ elif app_mode == 'Run on Video':
                         #                             int(face_landmarks.landmark[8].x * width),
                         #                             int(face_landmarks.landmark[8].y * height),
                         #                             overlay_size=(350, 350))
+                        # frame = overlay_transparent(frame,
+                        #                             overlay,
+                        #                             int(width/2),
+                        #                             int(height/2),
+                        #                             overlay_size=(width, height))
                         frame = overlay_transparent(frame,
                                                     overlay,
-                                                    int(width/2),
-                                                    int(height/2),
-                                                    overlay_size=(width/2, height/2))
+                                                    int(face_landmarks.landmark[8].x * width),
+                                                    int(face_landmarks.landmark[8].y * height),
+                                                    overlay_size=(200, 200))
 
                     elif rps_result[0]['rps'] == 'five':
                         text = 'face : overlay1'
