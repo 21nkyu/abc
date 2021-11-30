@@ -6,10 +6,6 @@ import tempfile
 import time
 from PIL import Image
 
-from streamlit_webrtc import webrtc_streamer
-import av
-
-webrtc_streamer(key="qwqw")
 
 # 손인식 개수, 학습된 제스쳐
 gesture = {0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
