@@ -224,9 +224,9 @@ elif app_mode == 'About Project 2':
                 'https://share.streamlit.io/21nkyu/abc/app.py'
                 )
 
-    st.markdown('3. 정확한 원인을 파악 하지는 못했지만 코드의 효용성이나 메모리등의 문제에 더하여 비교적 적은 용량의 간단한 프로그램을 올릴 수 있는 서버에 프로그램을'
-                ' 올려서인지는 몰라도 웹상에서 동영상을 통해 얼굴이나 손을 인식하는 탭에서 동영상의 재생이 원활하게 되지 않는 문제가 있습니다.'
-                )
+    # st.markdown('3. 정확한 원인을 파악 하지는 못했지만 코드의 효용성이나 메모리등의 문제에 더하여 비교적 적은 용량의 간단한 프로그램을 올릴 수 있는 서버에 프로그램을'
+    #             ' 올려서인지는 몰라도 웹상에서 동영상을 통해 얼굴이나 손을 인식하는 탭에서 동영상의 재생이 원활하게 되지 않는 문제가 있습니다.'
+    #             )
 
     img1 = Image.open('demos/project002.png')
     st.image(img1, width=400, caption='Image')
@@ -415,6 +415,12 @@ elif app_mode == 'Run on Video':
     with kpi4:
         st.markdown("**Image Width**")
         kpi4_text = st.markdown("0")
+    st.markdown('배포판의 문제점'
+                )
+    st.markdown('1. 웹캠 인식 문제: 웹 배포판에서 웹캠이 인식 되지 않는 문제가 있습니다'
+                )
+    st.markdown('2 동영상 재생 문제: 배포판의 웹상에서 동영상을 통해 얼굴이나 손을 인식하는 탭에서 동영상의 재생이 원활하게 되지 않는 문제가 있습니다.'
+                )
 
     st.markdown("<hr/>", unsafe_allow_html=True)
 
@@ -683,6 +689,7 @@ elif app_mode == 'Run on Video':
         frame = cv2.resize(frame, (0, 0), fx=0.8, fy=0.8)
         frame = image_resize(image=frame, width=640)
         stframe.image(frame, channels='BGR', use_column_width=True)
+
 
     st.text('Video Processed')
 
