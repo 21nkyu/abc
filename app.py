@@ -133,7 +133,7 @@ def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
 
 
 app_mode = st.sidebar.selectbox('Choose the App mode',
-                                ['About Project', 'About Project 2', 'Team intro', 'Run on Image', 'Run on Video'])
+                                ['About Project', 'About Project 2', 'Team info', 'Run on Image', 'Run on Video'])
 
 # app_mode: about Project
 if app_mode == 'About Project':
