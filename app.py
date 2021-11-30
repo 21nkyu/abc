@@ -33,7 +33,7 @@ label = file[:, -1].astype(np.float32)
 knn = cv2.ml.KNearest_create()
 knn.train(angle, cv2.ml.ROW_SAMPLE, label)
 
-# overlay image
+# overlay image 1
 overlay = cv2.imread('image/kn002.png', cv2.IMREAD_UNCHANGED)
 overlay1 = cv2.imread('image/cake002.png', cv2.IMREAD_UNCHANGED)
 overlay2 = cv2.imread('image/batman_1.png', cv2.IMREAD_UNCHANGED)
@@ -42,6 +42,20 @@ overlay4 = cv2.imread('image/star001.png', cv2.IMREAD_UNCHANGED)
 overlay5 = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
 overlay6 = cv2.imread('image/bear001.png', cv2.IMREAD_UNCHANGED)
 overlay7 = cv2.imread('image/bg001.png', cv2.IMREAD_UNCHANGED)
+
+
+# # overlay image ye2
+# overlay = cv2.imread('samples/face5.png', cv2.IMREAD_UNCHANGED)
+# overlay1 = cv2.imread('image/lens001.png', cv2.IMREAD_UNCHANGED)
+# overlay2 = cv2.imread('image/star001.png', cv2.IMREAD_UNCHANGED)
+# overlay3 = cv2.imread('image/santabody.png', cv2.IMREAD_UNCHANGED)
+# overlay4 = cv2.imread('image/christmas.png', cv2.IMREAD_UNCHANGED)
+# overlay5 = cv2.imread('image/cake.png', cv2.IMREAD_UNCHANGED)
+# overlay6 = cv2.imread('image/hny.png', cv2.IMREAD_UNCHANGED)
+# overlay7 = cv2.imread('image/tiger.png', cv2.IMREAD_UNCHANGED)
+# overlay8 = cv2.imread('image/kn002.png', cv2.IMREAD_UNCHANGED)
+
+
 
 # overlay function
 def overlay_transparent(background_img, img_to_overlay_t, x, y, overlay_size=None):
@@ -502,7 +516,7 @@ elif app_mode == 'Run on Video':
                                                     overlay,
                                                     int(width/2),
                                                     int(height/2),
-                                                    overlay_size=(width, height))
+                                                    overlay_size=(width/2, height/2))
 
                     elif rps_result[0]['rps'] == 'five':
                         text = 'face : overlay1'
@@ -543,9 +557,13 @@ elif app_mode == 'Run on Video':
                                                     int(face_landmarks.landmark[8].x * width),
                                                     int(face_landmarks.landmark[8].y * height),
                                                     overlay_size=(150, 150))
-
+                        # final_frame = overlay_transparent(final_frame,
+                        #                                   overlay5,
+                        #                                   int(face_landmarks.landmark[175].x * width + 15),
+                        #                                   int(face_landmarks.landmark[175].y * height + 25),
+                        #                                   overlay_size=(250, 250))
                     elif rps_result[0]['rps'] == 'ok':
-                        text = 'face : overlay3'
+                        text = 'face : overlay3, 4'
                         cv2.putText(frame,
                                     text=text,
                                     org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
@@ -604,7 +622,7 @@ elif app_mode == 'Run on Video':
                         #                             overlay_size=(100, 100))
 
                     elif rps_result[0]['rps'] == 'four':
-                        text = 'face : overlay1'
+                        text = 'face : overlay6'
                         cv2.putText(frame,
                                     text=text,
                                     org=(rps_result[0]['org'][0], rps_result[0]['org'][1] + 70),
