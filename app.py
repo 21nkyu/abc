@@ -109,7 +109,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.sidebar.title('짭now')
+st.sidebar.title('에스now')
 st.sidebar.subheader('Parameters')
 
 
@@ -419,7 +419,7 @@ elif app_mode == 'Run on Video':
                 )
     st.markdown('1. 웹캠 인식 문제: 웹 배포판에서 웹캠이 인식 되지 않는 문제가 있습니다'
                 )
-    st.markdown('2 동영상 재생 문제: 배포판의 웹상에서 동영상을 통해 얼굴이나 손을 인식하는 탭에서 동영상의 재생이 원활하게 되지 않는 문제가 있습니다.'
+    st.markdown('2. 동영상 재생 문제: 배포판의 웹상에서 동영상을 통해 얼굴이나 손을 인식하는 탭에서 동영상의 재생이 원활하게 되지 않는 문제가 있습니다.'
                 )
 
     st.markdown("<hr/>", unsafe_allow_html=True)
